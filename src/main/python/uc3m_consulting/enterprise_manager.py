@@ -15,6 +15,7 @@ class EnterpriseManager:
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON
+
         with open(corporate_operations, "r", encoding="utf-8") as file:
             try:
                 data = json.load(file)  #We store the JSON content into a list
@@ -22,7 +23,9 @@ class EnterpriseManager:
                 data = []  #We check incase the JSON content is empty
         if isinstance(data, str):
             data = [data]
-        data.append(result.project_id) #we add our result to the list
+        paramlist=[company_cif,project_achronym,project_description,department,date,budget,result.project_id]
+
+        data.append(paramlist) #we add our result to the list
 
         try:
             with open(corporate_operations, "w", encoding="utf-8", newline="") as file:
@@ -30,7 +33,7 @@ class EnterpriseManager:
 
 
         except FileNotFoundError:
-            data_list = []
+            data = []
         except json.decoder.JSONDecodeError:
             raise EnterpriseManagementException("json decode error-wrong json format") from ex
 

@@ -23,9 +23,7 @@ corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
 
-    def test_something( self ):
-        """dummy test"""
-        self.assertEqual(True, True)
+
     def test_TC1(self):
 
         o=EnterpriseManager()
@@ -35,11 +33,11 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result,"e002cdc5ce02bb0873afd10160dc864e")
         with open(corporate_operations,"r",encoding= "utf-8",newline="") as file: #we open the file to check if if has been saved
             data_list=json.load(file)
-
         found= False
-        for item in data_list: #we check the file (it is a list of id's) to see if the id is there
-            if item== result:
-                found= True
+        for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
+            for a in item: #since we store things as a list of lists, we have to do this
+                if a == result:
+                    found = True
         self.assertTrue(found)
 
 
@@ -51,11 +49,11 @@ class MyTestCase(unittest.TestCase):
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if if has been saved
             data_list = json.load(file)
-
         found = False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            if item == result:
-                found = True
+            for a in item: #since we store things as a list of lists, we have to do this
+                if a == result:
+                    found = True
         self.assertTrue(found)
     def test_TC3(self):
         o = EnterpriseManager()
@@ -68,8 +66,9 @@ class MyTestCase(unittest.TestCase):
 
         found = False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            if item == result:
-                found = True
+            for a in item: #since we store things as a list of lists, we have to do this
+                if a == result:
+                    found = True
         self.assertTrue(found)
     def test_TC4(self):
         o = EnterpriseManager()
@@ -81,9 +80,11 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
 
         found = False
+
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            if item == result:
-                found = True
+            for a in item:
+                if a == result:
+                    found = True
         self.assertTrue(found)
 
 if __name__ == '__main__':
