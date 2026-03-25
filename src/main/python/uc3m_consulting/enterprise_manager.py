@@ -1,5 +1,6 @@
 """Module """
-
+from .enterprise_management_exception import EnterpriseManagementException
+from .enterprise_project import EnterpriseProject
 class EnterpriseManager:
     """Class for providing the methods for managing the orders"""
     def __init__(self):
@@ -7,7 +8,10 @@ class EnterpriseManager:
 
     def register_project(company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
 
-        return True
+        #Code needed for T1-4 to run
+        result = EnterpriseProject(company_cif, project_achronym, operation_name, department, date, budget)
+        return result.project_id
+
 
     @staticmethod
     def validate_cif(cif: str):

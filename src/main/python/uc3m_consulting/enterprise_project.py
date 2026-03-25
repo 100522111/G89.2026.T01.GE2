@@ -3,6 +3,8 @@ import hashlib
 import json
 from datetime import datetime, timezone
 
+
+
 class EnterpriseProject:
     """Class representing a transfer request"""
     def __init__(self,
@@ -95,3 +97,5 @@ class EnterpriseProject:
     def project_id(self):
         """Returns the md5 signature (transfer code)"""
         return hashlib.md5(str(self).encode()).hexdigest()
+result = EnterpriseProject("B34798256","CLOUDPYT","moving to cloud","LOGISTICS","1/12/2025",50000.00)
+print(result.project_id)
