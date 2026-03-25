@@ -1,16 +1,43 @@
 """Module """
+import json
+from pathlib import Path
 from .enterprise_management_exception import EnterpriseManagementException
 from .enterprise_project import EnterpriseProject
+#general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
+JSON_FILES_PATH =("C:\AAADRIANO\MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH\G89.2026.T01.GE2") #Mycase
+corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 class EnterpriseManager:
     """Class for providing the methods for managing the orders"""
     def __init__(self):
         pass
 
     def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
-
-        #Code needed for T1-4 to run
+        #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
-        return result.project_id
+        #store into JSON
+        with open(corporate_operations, "r", encoding="utf-8") as file:
+            try:
+                data = json.load(file)  #We store the JSON content into a list
+            except json.JSONDecodeError:
+                data = []  #We check incase the JSON content is empty
+        if isinstance(data, str):
+            data = [data]
+        data.append(result.project_id) #we add our result to the list
+
+        try:
+            with open(corporate_operations, "w", encoding="utf-8", newline="") as file:
+                json.dump(data,file,indent=2) #we dump the list (we did it this way because dump rewrites)
+
+
+        except FileNotFoundError:
+            data_list = []
+        except json.decoder.JSONDecodeError:
+            raise EnterpriseManagementException("json decode error-wrong json format") from ex
+
+
+        return result.project_id #return if everything worked
+
+    """" """
 
 
     @staticmethod
