@@ -6,10 +6,10 @@ class EnterpriseManager:
     def __init__(self):
         pass
 
-    def register_project(company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
+    def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
 
         #Code needed for T1-4 to run
-        result = EnterpriseProject(company_cif, project_achronym, operation_name, department, date, budget)
+        result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         return result.project_id
 
 

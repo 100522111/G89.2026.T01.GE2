@@ -1,6 +1,6 @@
 """UC3M CONSULTING MODULE WITH ALL THE FEATURES REQUIRED FOR ACCESS CONTROL"""
 
-from .project_document import ProjectDocument
-from .enterprise_manager import EnterpriseManager
-from .enterprise_management_exception import EnterpriseManagementException
-from .enterprise_project import EnterpriseProject
+from uc3m_consulting.project_document import ProjectDocument
+from uc3m_consulting.enterprise_manager import EnterpriseManager
+from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
+from uc3m_consulting.enterprise_project import EnterpriseProject
