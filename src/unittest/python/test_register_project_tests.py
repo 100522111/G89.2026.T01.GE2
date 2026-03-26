@@ -11,6 +11,7 @@ if root_path not in sys.path:
 
 # we import
 from uc3m_consulting.enterprise_manager import EnterpriseManager
+from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
 from uc3m_consulting.project_document import ProjectDocument
 from freezegun import freeze_time
 import unittest
@@ -28,9 +29,9 @@ class MyTestCase(unittest.TestCase):
 
         o=EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result=o.register_project(company_cif="Z54712541",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="1/1/2025",budget=50000.00)
+            result=o.register_project(company_cif="A58818501",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="01/01/2025",budget=50000.00)
 
-        self.assertEqual(result,"e002cdc5ce02bb0873afd10160dc864e")
+        self.assertEqual(result,"c07f9592c27f8d90ca764cbd3f869702")
         with open(corporate_operations,"r",encoding= "utf-8",newline="") as file: #we open the file to check if if has been saved
             data_list=json.load(file)
         found= False
@@ -44,10 +45,9 @@ class MyTestCase(unittest.TestCase):
     def test_TC2(self):
         o = EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result = o.register_project("A12345678","EMIGRATING","this_description_has_30_charas","FINANCE","31/12/2027",10000)
-        self.assertEqual(result, "5e9c1747169161b86c7e968a23bdaafe")
-        with open(corporate_operations, "r", encoding="utf-8",
-                  newline="") as file:  # we open the file to check if if has been saved
+            result = o.register_project("A12345674","EMIGRATING","this_description_has_30_charas","FINANCE","31/12/2027",10000)
+        self.assertEqual(result, "235c24d9bdf837fe5f05f9c3d45f1b31")
+        with open(corporate_operations, "r", encoding="utf-8", newline="") as file:  # we open the file to check if if has been saved
             data_list = json.load(file)
         found = False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
@@ -58,8 +58,8 @@ class MyTestCase(unittest.TestCase):
     def test_TC3(self):
         o = EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result = o.register_project("V8321393","CLOUDPYT","moving to cloud"	,"LEGAL","20/02/2026",1000000)
-        self.assertEqual(result, "e549a73b0e348ec0e63fa82e6142928c")
+            result = o.register_project("P3900004G","CLOUDPYT","moving to cloud","LEGAL","20/02/2026",1000000)
+        self.assertEqual(result, "a68979499be6f81f79402d54a21ec871")
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if if has been saved
             data_list = json.load(file)
@@ -86,11 +86,9 @@ class MyTestCase(unittest.TestCase):
                 if a == result:
                     found = True
         self.assertTrue(found)
-    def tesst_TC5(self):
+    def test_TC5(self):
         o = EnterpriseManager()
-        with freeze_time("2025-01-12 12:00:00"):
-            result = o.register_project("12345678","123456789","moving to cloud","HR","20/02/2026",70000)
-        self.assertEqual(result, "EnterpriseManagementException")
-
+        with self.assertRaises(EnterpriseManagementException):
+            o.register_project("12345678", "...", "...", "HR", "20/02/2026", 70000)
 if __name__ == '__main__':
     unittest.main()

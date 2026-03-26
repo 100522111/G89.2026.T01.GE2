@@ -1,4 +1,5 @@
 """Module """
+import re 
 import json
 from pathlib import Path
 from .enterprise_management_exception import EnterpriseManagementException
@@ -12,6 +13,10 @@ class EnterpriseManager:
         pass
 
     def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
+        #raises error if format isn't the correct one
+        if self.validate_cif(company_cif) == False:
+            raise EnterpriseManagementException("Invalid CIF format")
+        
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON
@@ -34,7 +39,7 @@ class EnterpriseManager:
 
         except FileNotFoundError:
             data = []
-        except json.decoder.JSONDecodeError:
+        except json.decoder.JSONDecodeError as ex:
             raise EnterpriseManagementException("json decode error-wrong json format") from ex
 
 
@@ -45,50 +50,62 @@ class EnterpriseManager:
 
     @staticmethod
     def validate_cif(cif: str):
-        """this method validates the CIF"""
-        #If the CIF isn't a string, return False
+        """
+        Validates a Spanish CIF according to the Guided Exercise 1 rules.
+        Format: 1 Letter - 7 Numbers - 1 Control Character
+        """
+        # If the CIF isn't a string, return False
         if not isinstance(cif, str):
             return False
+            
         cif = cif.upper()
 
-        #Checking format to be 1 letter + 7 digits + 1 alphanumeric control
+        # Checking format to be 1 letter + 7 digits + 1 alphanumeric control [cite: 25]
         if not re.fullmatch(r"[A-Z]\d{7}[A-Z0-9]", cif):
             return False
 
         letter = cif[0]
-        numbers = cif[1:8]
+        numbers = cif[1:8] # The 7 numerical digits (Central body) [cite: 27]
         control = cif[8]
 
-        #Step 1: Sum even positions (2nd, 4th, 6th digits -> index 1,3,5)
-        even_sum = sum(int(numbers[i]) for i in range(1, 7, 2))
+        # STEP 1: Add the digits located in the even positions of the block [cite: 31]
+        # In a 7-digit block (indices 0-6), even positions are indices 1, 3, and 5
+        even_sum = int(numbers[1]) + int(numbers[3]) + int(numbers[5])
 
-        #Step 2: Process odd positions (1st, 3rd, 5th, 7th digits -> index 0,2,4,6)
+        # STEP 2: Process the odd-numbered digits (indices 0, 2, 4, 6) [cite: 32]
         odd_sum = 0
-        for i in range(0, 7, 2):
-            doubled = int(numbers[i]) * 2
-            if doubled > 9:
-                doubled = (doubled // 10) + (doubled % 10)
-            odd_sum += doubled
-        #Total sum
+        for i in [0, 2, 4, 6]:
+            digit = int(numbers[i])
+            # Multiply the digit by 2 [cite: 34]
+            doubled = digit * 2
+            # If the result has two digits, add them (e.g., 16 -> 1+6=7) 
+            odd_sum += (doubled // 10) + (doubled % 10)
+
+        # STEP 3: Add the result of step 1 + step 2 [cite: 38]
         total_sum = even_sum + odd_sum
 
-        #Base digit calculation
+        # STEP 4: Calculation of the Base Digit [cite: 39]
+        # Obtain the unit of the Partial Sum and subtract it from 10
         unit = total_sum % 10
-        base_digit = (10 - unit) % 10
+        # Note: If the unit is 0, the base digit is 0 
+        if unit == 0:
+            base_digit = 0
+        else:
+            base_digit = 10 - unit
 
-        #Determine correct control character
+        # STEP 5: Determination of the control character [cite: 41]
+        # Mapping table for letters K, P, Q, S [cite: 50]
         control_letters = "JABCDEFGHI"
 
         if letter in "ABEH":
-            #Must be numeric control
+            # the control character is the number obtained in step 4 [cite: 43]
             return control == str(base_digit)
 
         if letter in "KPQS":
-            #Must be letter control
+            # locate the value of the base digit in the table [cite: 48]
             return control == control_letters[base_digit]
 
-        #Other letters may accept either
+        # For other organization types (C, D, F, G, J, U, V), it can be either
         return control == str(base_digit) or control == control_letters[base_digit]
-
         """RETURNs TRUE IF THE IBAN RECEIVED IS VALID SPANISH IBAN,
         OR FALSE IN OTHER CASE"""
