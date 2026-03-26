@@ -17,7 +17,7 @@ import unittest
 import json
 from pathlib import Path
 #general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
-JSON_FILES_PATH =("C:\AAADRIANO\MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH\G89.2026.T01.GE2") #Mycase
+JSON_FILES_PATH =(r"C:\Users\raque\Downloads\Nico\G89.2026.T01.GE2\src\main\JsonFiles") #Mycase
 corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 
 class MyTestCase(unittest.TestCase):
@@ -86,6 +86,11 @@ class MyTestCase(unittest.TestCase):
                 if a == result:
                     found = True
         self.assertTrue(found)
+    def tesst_TC5(self):
+        o = EnterpriseManager()
+        with freeze_time("2025-01-12 12:00:00"):
+            result = o.register_project("12345678","123456789","moving to cloud","HR","20/02/2026",70000)
+        self.assertEqual(result, "EnterpriseManagementException")
 
 if __name__ == '__main__':
     unittest.main()
