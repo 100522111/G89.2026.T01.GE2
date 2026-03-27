@@ -48,8 +48,8 @@ class EnterpriseManager:
             if round(budget, 2) != budget:
                 raise EnterpriseManagementException("ERROR budget cannot have more than 2 decimals") #checks if there are more than 2 decimals
             else:
-                if budget <= 50000.00:
-                    raise EnterpriseManagementException("ERROR budget must be higher than 50000.00") #checks that the budget is over 50000.00
+                if budget < 50000.00:
+                    raise EnterpriseManagementException("ERROR budget must be higher than 50000.00") #checks that the budget is equal to or over 50000.00
                 elif budget > 1000000.00:
                     raise EnterpriseManagementException("ERROR budget must be lower than 1000000.00") #checks that the budget is under 1000000.00
 
@@ -60,34 +60,35 @@ class EnterpriseManager:
 
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
-        #store into JSON
 
-        with open(corporate_operations, "r", encoding="utf-8") as file:
-            try:
-                data = json.load(file)  #We store the JSON content into a list
-            except json.JSONDecodeError:
-                data = []  #We check incase the JSON content is empty
+        data = [] #Read the JSON
+        try:
+            with open(corporate_operations, "r", encoding="utf-8") as file:
+                data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            data = [] #If the file is deleted or empty, we just start with an empty list
+
         if isinstance(data, str):
             data = [data]
-        paramlist=[company_cif,project_achronym,project_description,department,date,budget,result.project_id]
 
-        data.append(paramlist) #we add our result to the list
 
+        for item in data: #Check for duplicates
+            saved_cif = item.get("_EnterpriseProject__company_cif")
+            saved_name = item.get("_EnterpriseProject__project_achronym")
+
+            if saved_cif == company_cif and saved_name == project_achronym:
+                raise EnterpriseManagementException("ERROR: A project with this name and CIF already exists")
+
+        data.append(result.__dict__) #Save as dictionary
+
+        #Write in the JSON file
         try:
             with open(corporate_operations, "w", encoding="utf-8", newline="") as file:
-                json.dump(data,file,indent=2) #we dump the list (we did it this way because dump rewrites)
+                json.dump(data, file, indent=2)
+        except Exception as ex:
+            raise EnterpriseManagementException("ERROR: Could not save to JSON") from ex
 
-
-        except FileNotFoundError:
-            data = []
-        except json.decoder.JSONDecodeError as ex:
-            raise EnterpriseManagementException("json decode error-wrong json format") from ex
-
-
-        return result.project_id #return if everything worked
-
-    """" """
-
+        return result.project_id  # return if everything worked
 
     @staticmethod
     def validate_cif(cif: str):

@@ -28,6 +28,10 @@ corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 class MyTestCase(unittest.TestCase):
     """class for testing the register_order method"""
 
+    def setUp(self):
+        """This runs automatically before every test to provide a clean slate."""
+        with open(corporate_operations, "w", encoding="utf-8") as file:
+            json.dump([], file) #leaves the JSON blank for next test
 
     def test_tc1(self):
 
@@ -40,9 +44,8 @@ class MyTestCase(unittest.TestCase):
             data_list=json.load(file)
         found= False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            for a in item: #since we store things as a list of lists, we have to do this
-                if a == result:
-                    found = True
+            if "A58818501" in str(item):
+                found = True
         self.assertTrue(found)
 
     def test_tc2(self):
@@ -54,9 +57,8 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
         found = False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            for a in item: #since we store things as a list of lists, we have to do this
-                if a == result:
-                    found = True
+            if "A12345674" in str(item):
+                found = True
         self.assertTrue(found)
 
     def test_tc3(self):
@@ -70,9 +72,8 @@ class MyTestCase(unittest.TestCase):
 
         found = False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            for a in item: #since we store things as a list of lists, we have to do this
-                if a == result:
-                    found = True
+            if "P3900004G" in str(item):
+                found = True
         self.assertTrue(found)
 
     def test_tc4(self):
@@ -87,9 +88,8 @@ class MyTestCase(unittest.TestCase):
         found = False
 
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            for a in item:
-                if a == result:
-                    found = True
+            if "B34798256" in str(item):
+                found = True
         self.assertTrue(found)
 
     def test_tc5(self):
@@ -338,6 +338,20 @@ class MyTestCase(unittest.TestCase):
                   newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)
         self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
+    def test_tc24(self):
+        o = EnterpriseManager()
+
+        with freeze_time("2025-01-12 12:00:00"):
+            o.register_project("A58818501", "DUPTEST", "valid_description", "HR", "01/01/2025", 50000.00)
+
+
+        with self.assertRaises(EnterpriseManagementException) as cm: #Try to register a project with the same CIF and acronym (invalid output)
+            with freeze_time("2025-01-12 12:05:00"):
+                #We use the same CIF ("A58818501") and Acronym ("DUPTEST")
+                o.register_project("A58818501", "DUPTEST", "different_desc", "FINANCE", "02/01/2025", 60000.00)
+
+        self.assertEqual(cm.exception.message, "ERROR: A project with this name and CIF already exists")
 
 if __name__ == '__main__':
     unittest.main()
