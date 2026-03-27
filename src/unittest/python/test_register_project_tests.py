@@ -170,5 +170,18 @@ class MyTestCase(unittest.TestCase):
             data_list2 = json.load(file)
         self.assertEqual(data_list2, data_list)  # the test passes if the list works
 
+    def test_tc11(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "Jose Luis", 50000.02)
+        self.assertEqual(cm.exception.message, "ERROR date format must be DD/MM/YYYY")  # we test the format of the date
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if it has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
 if __name__ == '__main__':
     unittest.main()
