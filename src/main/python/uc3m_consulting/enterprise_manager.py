@@ -5,6 +5,7 @@ from pathlib import Path
 from .enterprise_management_exception import EnterpriseManagementException
 from .enterprise_project import EnterpriseProject
 #general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
+#JSON_FILES_PATH=("C:\AAADRIANO\MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH\G89.2026.T01.GE2")
 JSON_FILES_PATH =(r"C:\Users\raque\Downloads\Nico\G89.2026.T01.GE2\src\main\JsonFiles") #Mycase
 corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 class EnterpriseManager:
@@ -13,9 +14,12 @@ class EnterpriseManager:
         pass
 
     def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
+        if  not isinstance(company_cif, str):
+           raise EnterpriseManagementException("ERROR CIF must be a string")
         #raises error if format isn't the correct one
-        if self.validate_cif(company_cif) == False:
-            raise EnterpriseManagementException("Invalid CIF format")
+        else:
+            if self.validate_cif(company_cif) == False:
+                raise EnterpriseManagementException("Invalid CIF format")
         
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)

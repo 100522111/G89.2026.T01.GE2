@@ -2,6 +2,9 @@
 import sys
 import os
 import json
+
+#from src.main.python.uc3m_consulting import JSON_FILES_PATH
+
 # We get to the absolute path so we can import everything
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "main", "python"))
 
@@ -18,6 +21,7 @@ import unittest
 import json
 from pathlib import Path
 #general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
+#JSON_FILES_PATH=("C:\AAADRIANO\MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH\G89.2026.T01.GE2")
 JSON_FILES_PATH =(r"C:\Users\raque\Downloads\Nico\G89.2026.T01.GE2\src\main\JsonFiles") #Mycase
 corporate_operations=JSON_FILES_PATH+"/corporate_operations.json"
 
@@ -88,7 +92,27 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(found)
     def test_TC5(self):
         o = EnterpriseManager()
-        with self.assertRaises(EnterpriseManagementException):
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("12345678", "...", "...", "HR", "20/02/2026", 70000)
+        self.assertEqual(cm.exception.message, "Invalid CIF format") #we test the cif of the format
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if if has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2,data_list)#the test passes if the list workws
+    def test_TC6(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project(30000000, "...", "...", "LOGISTICS", "2/12/2025", 70000)
+        self.assertEqual(cm.exception.message, "ERROR CIF must be a string") #we test the cif of the format
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if if has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2,data_list)#the test passes if the list workws
 if __name__ == '__main__':
     unittest.main()
