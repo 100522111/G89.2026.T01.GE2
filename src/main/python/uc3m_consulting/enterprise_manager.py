@@ -49,6 +49,9 @@ class EnterpriseManager:
                 elif budget > 1000000.00:
                     raise EnterpriseManagementException("ERROR budget must be lower than 1000000.00") #checks that the budget is under 1000000.00
 
+        if not isinstance(project_description, str):
+            raise EnterpriseManagementException("ERROR project_description must be a string") #checks that the project description is a string
+
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON

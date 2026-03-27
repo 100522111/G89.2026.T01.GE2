@@ -216,7 +216,7 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
         with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "05/12/2025", 60000.123)
-        self.assertEqual(cm.exception.message, "ERROR budget cannot have more than 2 decimals")  # we test the format of the date
+        self.assertEqual(cm.exception.message, "ERROR budget cannot have more than 2 decimals")  # we test the format of the budget
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)
@@ -229,7 +229,7 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
         with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "05/12/2025", 6000.00)
-        self.assertEqual(cm.exception.message, "ERROR budget must be higher than 50000.00")  # we test the format of the date
+        self.assertEqual(cm.exception.message, "ERROR budget must be higher than 50000.00")  # we test the format of the budget
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)
@@ -242,7 +242,20 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
         with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "05/12/2025", 7000000.03)
-        self.assertEqual(cm.exception.message, "ERROR budget must be lower than 1000000.00")  # we test the format of the date
+        self.assertEqual(cm.exception.message, "ERROR budget must be lower than 1000000.00")  # we test the format of the budget
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if it has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
+    def test_tc17(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project("A58818501", "CLOUDPYT", 300, "LOGISTICS", "05/12/2025", 50000.05)
+        self.assertEqual(cm.exception.message, "ERROR project_description must be a string")  # we test the format of the description
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)
