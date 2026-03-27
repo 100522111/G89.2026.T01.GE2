@@ -31,20 +31,36 @@ class MyTestCase(unittest.TestCase):
     def setUp(self):
         """This runs automatically before every test to provide a clean slate."""
         with open(corporate_operations, "w", encoding="utf-8") as file:
-            json.dump([], file) #leaves the JSON blank for next test
+            json.dump([], file)  # leaves the JSON blank for next test
+
+    @classmethod
+    def tearDownClass(cls):
+        """This runs onmy once after all tests are finished"""
+
+        #Wipe the file clean
+        with open(corporate_operations, "w", encoding="utf-8") as file:
+            json.dump([], file)
+
+        #Register the 4 valid projects
+        o = EnterpriseManager()
+        with freeze_time("2025-01-12 12:00:00"):
+            o.register_project("B98765431", "ABCDE", "10_char_de", "HR", "01/01/2025", 50000.01)  # TC1
+            o.register_project("A12345674", "EMIGRATING", "this_description_has_30_charas", "FINANCE", "31/12/2027",100000.00)  # TC2
+            o.register_project("P3900004G", "CLOUDPYT", "moving to cloud", "LEGAL", "20/02/2026", 1000000.00)  # TC3
+            o.register_project("B34798256", "CLOUDPYT", "moving to cloud", "LOGISTICS", "1/12/2025", 50000.01)  # TC4
 
     def test_tc1(self):
 
         o=EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result=o.register_project(company_cif="A58818501",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="01/01/2025",budget=50000.01)
+            result=o.register_project(company_cif="B98765431",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="01/01/2025",budget=50000.01)
 
-        self.assertEqual(result,"ebd95e367693cbb592170c1e077cc8ac")
+        self.assertEqual(result,"8c3b05cc90c582dfdb8b47bf41c7c7ae")
         with open(corporate_operations,"r",encoding= "utf-8",newline="") as file: #we open the file to check if it has been saved
             data_list=json.load(file)
         found= False
         for item in data_list:  # we check the file (it is a list of id's) to see if the id is there
-            if "A58818501" in str(item):
+            if "B98765431" in str(item):
                 found = True
         self.assertTrue(found)
 
