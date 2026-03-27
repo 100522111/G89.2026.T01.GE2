@@ -862,5 +862,41 @@
     "1/12/2025",
     50000.0,
     "5a3d892b0de70c3335000699a483b6e2"
+  ],
+  [
+    "A58818501",
+    "ABCDE",
+    "10_char_de",
+    "HR",
+    "01/01/2025",
+    50000.0,
+    "c07f9592c27f8d90ca764cbd3f869702"
+  ],
+  [
+    "A12345674",
+    "EMIGRATING",
+    "this_description_has_30_charas",
+    "FINANCE",
+    "31/12/2027",
+    10000.0,
+    "e3c3a5769fc1896c0ce04f796baca741"
+  ],
+  [
+    "P3900004G",
+    "CLOUDPYT",
+    "moving to cloud",
+    "LEGAL",
+    "20/02/2026",
+    1000000.0,
+    "bc098bead4214bc96df989d618ee8dac"
+  ],
+  [
+    "B34798256",
+    "CLOUDPYT",
+    "moving to cloud",
+    "LOGISTICS",
+    "1/12/2025",
+    50000.0,
+    "5a3d892b0de70c3335000699a483b6e2"
   ]
 ]
