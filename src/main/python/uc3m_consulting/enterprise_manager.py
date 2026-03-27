@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from .enterprise_management_exception import EnterpriseManagementException
 from .enterprise_project import EnterpriseProject
+from datetime import datetime
 #general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
 #JSON_FILES_PATH=("C:\AAADRIANO\MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH\G89.2026.T01.GE2")
 JSON_FILES_PATH =(r"C:\Users\raque\Downloads\Nico\G89.2026.T01.GE2\src\main\JsonFiles") #Mycase
@@ -15,19 +16,27 @@ class EnterpriseManager:
 
     def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
         if  not isinstance(company_cif, str):
-           raise EnterpriseManagementException("ERROR CIF must be a string")
-        #raises error if format isn't the correct one
+           raise EnterpriseManagementException("ERROR CIF must be a string") #raises error if format isn't the correct one
         else:
             if self.validate_cif(company_cif) == False:
                 raise EnterpriseManagementException("Invalid CIF format") #checks if the CIF is the correct format
+
         if  not isinstance(project_achronym, str):
            raise EnterpriseManagementException("ERROR project acronym must be a string") #checks if the acronym is the correct format (string)
+
         if not isinstance(department, str):
             raise EnterpriseManagementException("ERROR department must be a string") #checks if the department is the correct format (string)
         else:
             if department not in ("HR", "FINANCE", "LEGAL", "LOGISTICS"):
                 raise EnterpriseManagementException("ERROR department must be one of the following strings: HR, FINANCE, LEGAL, LOGISTICS") #checks if the department is one of the valid strings
 
+        if isinstance(date, str):
+            try:
+                datetime.strptime(date, "%d/%m/%Y")
+            except ValueError as ex:
+                raise EnterpriseManagementException("ERROR date format must be DD/MM/YYYY") from ex #checks that date is the correct format
+        else:
+            raise EnterpriseManagementException("ERROR date must be a string") #checks that date is string
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON

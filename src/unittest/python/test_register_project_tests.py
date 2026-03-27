@@ -151,10 +151,24 @@ class MyTestCase(unittest.TestCase):
             data_list = json.load(file)
         with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("A58818501", "CLOUDPYT", "...", "MARKETING", "3/12/2025", 50000.02)
-        self.assertEqual(cm.exception.message, "ERROR department must be one of the following strings: HR, FINANCE, LEGAL, LOGISTICS")  # we test the department of the format
+        self.assertEqual(cm.exception.message, "ERROR department must be one of the following strings: HR, FINANCE, LEGAL, LOGISTICS")  # we test the format of the department
         with open(corporate_operations, "r", encoding="utf-8",
         newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)
         self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
+    def test_tc10(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+        newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", 4/12/2025, 50000.02)
+        self.assertEqual(cm.exception.message, "ERROR date must be a string")  # we test the format of the date
+        with open(corporate_operations, "r", encoding="utf-8",
+        newline="") as file:  # we open the file to check if it has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
 if __name__ == '__main__':
     unittest.main()
