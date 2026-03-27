@@ -16,13 +16,15 @@ class EnterpriseManager:
 
     def register_project(self,company_cif: str, project_achronym: str, project_description: str, department: str,date: str, budget: float):
         if  not isinstance(company_cif, str):
-           raise EnterpriseManagementException("ERROR CIF must be a string") #raises error if format isn't the correct one
+            raise EnterpriseManagementException("ERROR CIF must be a string") #raises error if format isn't the correct one
         else:
             if self.validate_cif(company_cif) == False:
                 raise EnterpriseManagementException("Invalid CIF format") #checks if the CIF is the correct format
 
         if  not isinstance(project_achronym, str):
-           raise EnterpriseManagementException("ERROR project acronym must be a string") #checks if the acronym is the correct format (string)
+            raise EnterpriseManagementException("ERROR project acronym must be a string") #checks if the acronym is the correct format (string)
+        elif not (5 <= len(project_achronym) <= 10):
+            raise EnterpriseManagementException("ERROR project acronym must be between 5 and 10 characters") #checks if the acronym is between 5 and 10 characters
 
         if not isinstance(department, str):
             raise EnterpriseManagementException("ERROR department must be a string") #checks if the department is the correct format (string)
