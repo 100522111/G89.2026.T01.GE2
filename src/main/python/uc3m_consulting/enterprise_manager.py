@@ -19,10 +19,15 @@ class EnterpriseManager:
         #raises error if format isn't the correct one
         else:
             if self.validate_cif(company_cif) == False:
-                raise EnterpriseManagementException("Invalid CIF format")
+                raise EnterpriseManagementException("Invalid CIF format") #checks if the CIF is the correct format
         if  not isinstance(project_achronym, str):
-           raise EnterpriseManagementException("ERROR project achronym must be a string")
-        #raises error if format isn't the correct one
+           raise EnterpriseManagementException("ERROR project acronym must be a string") #checks if the acronym is the correct format (string)
+        if not isinstance(department, str):
+            raise EnterpriseManagementException("ERROR department must be a string") #checks if the department is the correct format (string)
+        else:
+            if department not in ("HR", "FINANCE", "LEGAL", "LOGISTICS"):
+                raise EnterpriseManagementException("ERROR department must be one of the following strings: HR, FINANCE, LEGAL, LOGISTICS") #checks if the department is one of the valid strings
+
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON
