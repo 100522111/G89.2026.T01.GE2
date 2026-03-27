@@ -19,9 +19,8 @@ from uc3m_consulting.enterprise_manager import EnterpriseManager
 from uc3m_consulting.enterprise_management_exception import EnterpriseManagementException
 #pylint: enable=wrong-import-position
 
-#general case JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
-JSON_FILES_PATH="C:/AAADRIANO/MIERDA SISTEMA EDUCATIVO AHHHHHHHHHHHHHHHHH/G89.2026.T01.GE2"
-#JSON_FILES_PATH =r"C:/Users/raque/Downloads/Nico/G89.2026.T01.GE2/src/main/JsonFiles" #Mycase
+JSON_FILES_PATH =(str(Path.home())+"/G89.2026.T01.GE2/src/main/JsonFiles")
+#if this doesn't work just change it for a string containing path to jsonfiles
 CORPORATE_OPERATIONS= JSON_FILES_PATH + "/corporate_operations.json"
 
 class MyTestCase(unittest.TestCase):
