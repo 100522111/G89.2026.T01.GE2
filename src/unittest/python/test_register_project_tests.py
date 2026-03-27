@@ -114,5 +114,17 @@ class MyTestCase(unittest.TestCase):
                   newline="") as file:  # we open the file to check if if has been changed
             data_list2 = json.load(file)
         self.assertEqual(data_list2,data_list)#the test passes if the list workws
+    def test_TC7(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project("B34798256", 300, "...", "LOGISTICS", "2/12/2025", 70000)
+        self.assertEqual(cm.exception.message, "ERROR project achronym must be a string") #we test the cif of the format
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if if has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2,data_list)#the test passes if the list workws
 if __name__ == '__main__':
     unittest.main()
