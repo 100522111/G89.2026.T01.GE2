@@ -25,6 +25,8 @@ class EnterpriseManager:
             raise EnterpriseManagementException("ERROR project acronym must be a string") #checks if the acronym is the correct format (string)
         elif not (5 <= len(project_achronym) <= 10):
             raise EnterpriseManagementException("ERROR project acronym must be between 5 and 10 characters") #checks if the acronym is between 5 and 10 characters
+        elif not re.fullmatch(r"^[a-zA-Z0-9_ ]+$", project_achronym):
+            raise EnterpriseManagementException("ERROR project acronym contains invalid characters") #checks that the string only contains alphanumeric values and spaces
 
         if not isinstance(department, str):
             raise EnterpriseManagementException("ERROR department must be a string") #checks if the department is the correct format (string)
