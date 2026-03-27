@@ -51,6 +51,8 @@ class EnterpriseManager:
 
         if not isinstance(project_description, str):
             raise EnterpriseManagementException("ERROR project_description must be a string") #checks that the project description is a string
+        elif not (10 <= len(project_description) <= 30):
+            raise EnterpriseManagementException("ERROR project description must be between 10 and 30 characters") #checks that the string is between 10 and 30 chars
 
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
