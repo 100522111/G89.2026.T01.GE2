@@ -353,5 +353,18 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(cm.exception.message, "ERROR: A project with this name and CIF already exists")
 
+    def test_tc25(self):
+        o = EnterpriseManager()
+        with freeze_time("2025-01-12 12:00:00"):
+            result = o.register_project("A58818501", "ABCDE", "10_char_de", "HR", "01/01/2025", 50000.01)
+
+        #Check that the output is a string
+        self.assertIsInstance(result, str, "The output is not a string")
+
+        #Check that it is exactly 32 chars long
+        self.assertEqual(len(result), 32, f"Expected 32 chars, but got {len(result)}")
+
+        self.assertEqual(result, "ebd95e367693cbb592170c1e077cc8ac")
+
 if __name__ == '__main__':
     unittest.main()
