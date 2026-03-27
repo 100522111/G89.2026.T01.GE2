@@ -33,9 +33,9 @@ class MyTestCase(unittest.TestCase):
 
         o=EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result=o.register_project(company_cif="A58818501",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="01/01/2025",budget=50000.00)
+            result=o.register_project(company_cif="A58818501",project_achronym="ABCDE",project_description="10_char_de",department="HR",date="01/01/2025",budget=50000.01)
 
-        self.assertEqual(result,"c07f9592c27f8d90ca764cbd3f869702")
+        self.assertEqual(result,"ebd95e367693cbb592170c1e077cc8ac")
         with open(corporate_operations,"r",encoding= "utf-8",newline="") as file: #we open the file to check if it has been saved
             data_list=json.load(file)
         found= False
@@ -48,8 +48,8 @@ class MyTestCase(unittest.TestCase):
     def test_tc2(self):
         o = EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result = o.register_project("A12345674","EMIGRATING","this_description_has_30_charas", "FINANCE","31/12/2027",10000.00)
-        self.assertEqual(result, "e3c3a5769fc1896c0ce04f796baca741")
+            result = o.register_project("A12345674","EMIGRATING","this_description_has_30_charas", "FINANCE","31/12/2027",100000.00)
+        self.assertEqual(result, "92120f42918eefa12621a18a18588b44")
         with open(corporate_operations, "r", encoding="utf-8", newline="") as file:  # we open the file to check if it has been saved
             data_list = json.load(file)
         found = False
@@ -78,8 +78,8 @@ class MyTestCase(unittest.TestCase):
     def test_tc4(self):
         o = EnterpriseManager()
         with freeze_time("2025-01-12 12:00:00"):
-            result = o.register_project("B34798256","CLOUDPYT","moving to cloud","LOGISTICS","1/12/2025",50000.00)
-        self.assertEqual(result, "5a3d892b0de70c3335000699a483b6e2")
+            result = o.register_project("B34798256","CLOUDPYT","moving to cloud","LOGISTICS","1/12/2025",50000.01)
+        self.assertEqual(result, "039c91e63c7ef7486963f80f6e4c9681")
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if it has been saved
             data_list = json.load(file)
@@ -204,6 +204,19 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(EnterpriseManagementException) as cm:
             o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "00/00/2023", 50000.02)
         self.assertEqual(cm.exception.message, "ERROR date format must be DD/MM/YYYY")  # we test the format of the date
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file to check if it has been changed
+            data_list2 = json.load(file)
+        self.assertEqual(data_list2, data_list)  # the test passes if the list works
+
+    def test_tc14(self):
+        o = EnterpriseManager()
+        with open(corporate_operations, "r", encoding="utf-8",
+                  newline="") as file:  # we open the file before calling the function
+            data_list = json.load(file)
+        with self.assertRaises(EnterpriseManagementException) as cm:
+            o.register_project("A58818501", "CLOUDPYT", "...", "LOGISTICS", "05/12/2025", 60000.123)
+        self.assertEqual(cm.exception.message, "ERROR budget cannot have more than 2 decimals")  # we test the format of the date
         with open(corporate_operations, "r", encoding="utf-8",
                   newline="") as file:  # we open the file to check if it has been changed
             data_list2 = json.load(file)

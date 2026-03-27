@@ -40,6 +40,14 @@ class EnterpriseManager:
 
         if not isinstance(budget, float):
             raise EnterpriseManagementException("ERROR budget must be a float") #checks that the budget is a float
+        else:
+            if round(budget, 2) != budget:
+                raise EnterpriseManagementException("ERROR budget cannot have more than 2 decimals") #checks if there are more than 2 decimals
+            else:
+                if budget <= 50000.00:
+                    raise EnterpriseManagementException("ERROR budget must be higher than 50000.00") #checks that the budget is over 50000.00
+                elif budget > 1000000.00:
+                    raise EnterpriseManagementException("ERROR budget must be lower than 1000000.00") #checks that the budget is under 1000000.00
 
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
