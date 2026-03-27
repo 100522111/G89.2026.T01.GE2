@@ -37,6 +37,10 @@ class EnterpriseManager:
                 raise EnterpriseManagementException("ERROR date format must be DD/MM/YYYY") from ex #checks that date is the correct format
         else:
             raise EnterpriseManagementException("ERROR date must be a string") #checks that date is string
+
+        if not isinstance(budget, float):
+            raise EnterpriseManagementException("ERROR budget must be a float") #checks that the budget is a float
+
         #Get the result for t1-t4
         result = EnterpriseProject(company_cif, project_achronym, project_description, department, date, budget)
         #store into JSON
